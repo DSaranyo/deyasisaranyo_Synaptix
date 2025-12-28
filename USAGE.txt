@@ -1,0 +1,276 @@
+AGENTIC DEVELOPER WORKFLOW AGENT
+═════════════════════════════════════════════════════════════════════
+
+A real-time, autonomous AI agent built with Pathway framework for the
+Agentic AI Hackathon. This system continuously monitors developer workflow
+events and autonomously manages tasks, alerts, and actions.
+
+🎯 ARCHITECTURE
+═══════════════
+
+   ┌─────────────────────────────────────────────────────┐
+   │              PATHWAY STREAMING ENGINE                │
+   │                                                      │
+   │  CSV Stream → Observer → Memory → Planner → Executor│
+   │                  ↓         ↓        ↓         ↓     │
+   │              Classify   Reducers  Rules    Actions  │
+   └─────────────────────────────────────────────────────┘
+
+This is NOT a chatbot. It's an autonomous agent that:
+  ✓ Continuously processes events
+  ✓ Maintains stateful memory
+  ✓ Makes autonomous decisions
+  ✓ Executes actions without prompts
+  ✓ Uses LLM only for reasoning refinement (optional)
+
+🚀 QUICK START
+══════════════
+
+1. Install Pathway (requires network):
+   pip install pathway litellm
+
+2. Run the agent:
+   python agent_simple.py
+
+3. OR run tests without Pathway:
+   python test_standalone.py
+
+📁 PROJECT STRUCTURE
+════════════════════
+
+pathway_agent/
+├── agent_simple.py          ← Main agent (no async complexity)
+├── agent.py                 ← Full version with LLM integration
+├── observer.py              ← Event ingestion & classification
+├── memory.py                ← State management (Pathway reducers)
+├── planner.py               ← Autonomous decision logic
+├── executor.py              ← Action execution
+├── data/workflow_events.csv ← Sample events stream
+├── test_standalone.py       ← Test without Pathway
+└── output/                  ← Generated logs
+
+⚙️  COMPONENTS
+═════════════
+
+1. OBSERVER (observer.py)
+   - Ingests workflow events from CSV stream
+   - Classifies events (error, test_failure, deployment, etc.)
+   - Validates and enriches event data
+   - Generates sample events for testing
+
+2. MEMORY (memory.py)
+   - Uses Pathway reducers for stateful aggregation
+   - Tracks event frequencies and patterns
+   - Detects recurring issues
+   - Maintains temporal context
+   - Specialized memory for errors
+
+3. PLANNER (planner.py)
+   - Autonomous decision-making (rule-based)
+   - NO blind LLM control
+   - Selects actions based on:
+     * Event type and priority
+     * Historical patterns (from memory)
+     * Escalation thresholds
+     * Context from previous events
+   - Supports actions:
+     * create_task
+     * notify
+     * escalate
+     * schedule
+     * monitor
+     * block_deployment
+     * aggregate
+     * auto_fix
+
+4. EXECUTOR (executor.py)
+   - Executes planned actions
+   - Creates tasks with proper metadata
+   - Sends notifications to channels
+   - Schedules code reviews
+   - Starts monitoring sessions
+   - Blocks deployments for security
+   - Auto-fixes known issues
+   - Maintains execution audit trail
+
+🎮 PATHWAY FEATURES USED
+════════════════════════
+
+✓ pw.io.csv.read()        - Streaming CSV input
+✓ pw.Table.select()       - Column transformations
+✓ pw.Table.filter()       - Event filtering
+✓ pw.Table.groupby()      - State aggregation
+✓ pw.Table.join()         - Context enrichment
+✓ pw.apply()              - UDF application
+✓ pw.reducers.count()     - Event counting
+✓ pw.reducers.latest()    - Latest timestamp
+✓ pw.reducers.tuple()     - Data accumulation
+✓ pw.reducers.max/avg()   - Priority tracking
+✓ pw.io.subscribe()       - Output handling
+✓ pw.io.jsonlines.write() - Persistent logging
+✓ pw.run()                - Execution engine
+
+📊 EXAMPLE SCENARIOS
+═══════════════════
+
+Scenario 1: Critical Error
+---------------------------
+Event: Database connection timeout (10th occurrence)
+Agent Actions:
+  1. Creates high-priority task
+  2. Sends urgent notification to #alerts
+  3. Escalates to engineering manager
+  4. Mentions @oncall engineer
+
+Scenario 2: Recurring Test Failure
+-----------------------------------
+Event: test_user_login fails (5th time)
+Agent Actions:
+  1. Creates task for QA team
+  2. Escalates due to repeated failure
+  3. Aggregates related failures into epic
+  4. Suggests potential root cause
+
+Scenario 3: Security Alert
+---------------------------
+Event: CVE-2024-1234 vulnerability detected
+Agent Actions:
+  1. Creates critical security task
+  2. Notifies #security channel immediately
+  3. BLOCKS ALL DEPLOYMENTS
+  4. Escalates to security team
+  5. Assigns to security_team
+
+Scenario 4: Deployment
+----------------------
+Event: Production deployment completed
+Agent Actions:
+  1. Starts 30-minute monitoring
+  2. Creates verification task
+  3. Tracks error rate, latency, resources
+  4. Auto-alerts if metrics degrade
+
+🧪 TESTING
+══════════
+
+Test standalone logic (no Pathway needed):
+  python test_standalone.py
+
+This demonstrates:
+  ✓ Autonomous decision-making
+  ✓ Rule-based planning
+  ✓ Action execution
+  ✓ Pattern detection
+  ✓ Escalation logic
+
+Full integration test (requires Pathway):
+  python test_agent.py
+
+Run the agent:
+  python agent_simple.py
+
+🔑 KEY FEATURES
+═══════════════
+
+1. TRULY AUTONOMOUS
+   - No user prompts required
+   - Decisions based on state + rules
+   - Continuous event processing
+   - Self-triggered actions
+
+2. STATEFUL MEMORY
+   - Uses Pathway reducers
+   - Tracks patterns across events
+   - Detects recurring issues
+   - Temporal awareness
+
+3. INTELLIGENT PLANNING
+   - Rule-based decision tree
+   - Context-aware action selection
+   - Automatic escalation
+   - Pattern-based aggregation
+
+4. RELIABLE EXECUTION
+   - Validated actions
+   - Audit trail
+   - Error handling
+   - Execution statistics
+
+5. LLM AS REASONING LAYER
+   - Optional refinement
+   - NOT for blind control
+   - Validates autonomous plans
+   - Provides explanations
+
+⚠️  IMPORTANT NOTES
+══════════════════
+
+This is NOT a chatbot:
+  ✗ No user chat interface
+  ✗ No request-response pattern
+  ✗ No conversational agent
+
+This IS an agentic system:
+  ✓ Event-driven architecture
+  ✓ Autonomous decision loop
+  ✓ Continuous operation
+  ✓ Self-managed actions
+
+🔧 CONFIGURATION
+════════════════
+
+Edit data/workflow_events.csv to simulate different scenarios
+
+Modify planner.py to adjust:
+  - Action selection rules
+  - Escalation thresholds
+  - Priority calculations
+
+Modify executor.py to add:
+  - New action types
+  - External integrations
+  - Custom workflows
+
+📈 OUTPUT
+═════════
+
+Console: Real-time action logs
+File: output/agent_actions.jsonl (persistent log)
+
+Each entry contains:
+  - Event details
+  - Priority & context
+  - Planned actions
+  - Execution results
+  - Timestamps
+
+🏆 HACKATHON HIGHLIGHTS
+═══════════════════════
+
+Why this agent wins:
+  1. Uses Pathway correctly (streaming + reducers)
+  2. True agentic behavior (autonomous decisions)
+  3. Production-ready architecture
+  4. Clear separation of concerns
+  5. LLM as tool, not controller
+  6. Stateful memory system
+  7. Pattern detection & learning
+  8. Comprehensive action execution
+  9. Full audit trail
+ 10. Actually works!
+
+💡 EXTENSIONS
+═════════════
+
+Easy to add:
+  - More event types
+  - Custom action executors
+  - External API integrations
+  - Slack/Discord notifications
+  - GitHub API for real tasks
+  - Jira integration
+  - Monitoring dashboards
+  - Multi-agent coordination
+
+Built with ❤️ for Agentic AI Hackathon
+Framework: Pathway (https://pathway.com)

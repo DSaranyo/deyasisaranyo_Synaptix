@@ -1,0 +1,97 @@
+pathway_agent/
+│
+├── agent.py                    # Main orchestrator with LLM integration
+├── agent_simple.py             # Simplified orchestrator (no async LLM)
+│
+├── observer.py                 # Event stream ingestion & classification
+├── memory.py                   # State management using Pathway reducers
+├── planner.py                  # Autonomous decision-making logic
+├── executor.py                 # Action execution engine
+│
+├── data/
+│   └── workflow_events.csv     # Sample workflow events (streaming input)
+│
+├── output/
+│   └── agent_actions.jsonl     # Execution logs (generated)
+│
+├── requirements.txt            # Python dependencies
+├── setup.sh                    # Environment setup script
+├── run.sh                      # Quick run script
+└── test_agent.py              # Component & integration tests
+
+
+ARCHITECTURE:
+═════════════
+
+┌──────────────────────────────────────────────────────────┐
+│                    PATHWAY STREAMING                      │
+│                                                           │
+│  CSV Events → Observer → Memory → Planner → Executor    │
+│                    ↓         ↓        ↓         ↓        │
+│                Classify  Reducers  Rules    Actions      │
+└──────────────────────────────────────────────────────────┘
+
+COMPONENTS:
+═══════════
+
+1. OBSERVER (observer.py)
+   - Ingests events from CSV stream
+   - Classifies event types
+   - Validates event structure
+   - Enriches with metadata
+
+2. MEMORY (memory.py)
+   - Uses Pathway reducers for state
+   - Tracks event frequencies
+   - Detects patterns (recurring issues)
+   - Maintains temporal context
+   - Specialized error memory
+
+3. PLANNER (planner.py)
+   - Autonomous decision-making
+   - Rule-based action selection
+   - No LLM dependency for core logic
+   - Escalation logic
+   - Pattern-based actions
+
+4. EXECUTOR (executor.py)
+   - Executes planned actions
+   - Creates tasks
+   - Sends notifications
+   - Schedules activities
+   - Monitors systems
+   - Blocks deployments
+   - Auto-fixes known issues
+
+PATHWAY FEATURES USED:
+══════════════════════
+
+✓ pw.io.csv.read() - Streaming CSV input
+✓ pw.Table operations (select, filter, join)
+✓ pw.reducers (count, latest, tuple, max, avg)
+✓ pw.groupby() - State aggregation
+✓ pw.apply() - UDF application
+✓ pw.JoinMode - Context enrichment
+✓ pw.io.subscribe() - Output handling
+✓ pw.run() - Execution engine
+
+KEY FEATURES:
+═════════════
+
+✓ Continuous streaming (not batch)
+✓ Stateful memory via reducers
+✓ Autonomous planning (no blind LLM control)
+✓ Event-driven architecture
+✓ Pattern detection
+✓ Automatic escalation
+✓ Action execution with audit trail
+
+NOT A CHATBOT:
+══════════════
+
+✗ No user prompts
+✗ No request-response pattern
+✗ No chat interface
+✓ Autonomous agent loop
+✓ Event-driven decisions
+✓ Continuous monitoring
